@@ -117,9 +117,16 @@
   mcols(mRNA_front_bin) <- data.frame(mcols(mRNA_front_bin),comp="Front",category="mRNA")
   mcols(mRNA_back_bin) <- data.frame(mcols(mRNA_back_bin),comp="Back",category="mRNA")
 
-  mcols(ncRNA_bin) <- data.frame(mcols(ncRNA_bin),comp="lncRNA",category="lncRNA")
-  mcols(ncRNA_front_bin) <- data.frame(mcols(ncRNA_front_bin),comp="Front",category="lncRNA")
-  mcols(ncRNA_back_bin) <- data.frame(mcols(ncRNA_back_bin),comp="Back",category="lncRNA")
+  if (length(ncRNA_bin) > 0){
+    mcols(ncRNA_bin) <- data.frame(mcols(ncRNA_bin),comp="lncRNA",category="lncRNA")
+  }
+
+  if (length(ncRNA_front_bin) > 0){
+    mcols(ncRNA_front_bin) <- data.frame(mcols(ncRNA_front_bin),comp="Front",category="lncRNA")
+  }
+  if (length(ncRNA_back_bin) > 0){
+    mcols(ncRNA_back_bin) <- data.frame(mcols(ncRNA_back_bin),comp="Back",category="lncRNA")
+  }
 
 
   GuitarCoords <- suppressWarnings(c(mRNA_front_bin,utr5_bin, cds_bin, utr3_bin, mRNA_back_bin,
@@ -198,6 +205,9 @@
                                             collapseGene=FALSE,
                                             width = 51) {
 
+  if (length(comp) == 0) {
+    return(GRanges())
+  }
   # get all the check points
   tx_length <- as.numeric(sum(width(comp)))
   checkpoints_interval <- tx_length/noBins
